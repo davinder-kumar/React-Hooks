@@ -10,10 +10,12 @@ import useHttp from '../../hooks/useHttp'
 const ingredientReducer = (ingredients, action) => {
   switch (action.type) {
     case "ADD":
+      // console.log(ingredients, action.ingredient,"FITSTs")
       const state = [
         ...ingredients,
         action.ingredient
       ]
+      // console.log(state,"KAST")
       return state
     case "SET":
       return action.ingredients
@@ -30,11 +32,15 @@ const Ingredients = (props) => {
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
   useEffect(() => {
     if (actionName === 'ADD')
-      dispatch({ type: "ADD", ingredient: {...extraData, id: data.name} })
+      dispatch({ type: "ADD", ingredient: data })
     else if (actionName === 'DELETE'){
       dispatch({ type: "DELETE", id: extraData })
     }
   }, [data, actionName,extraData]);
+
+
+
+
   const onFilterHandler = useCallback(ingredients => {
     dispatch({ type: "SET", ingredients: ingredients })
   }, [])

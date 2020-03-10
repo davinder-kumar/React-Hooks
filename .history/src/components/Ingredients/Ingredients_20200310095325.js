@@ -10,10 +10,12 @@ import useHttp from '../../hooks/useHttp'
 const ingredientReducer = (ingredients, action) => {
   switch (action.type) {
     case "ADD":
+      // console.log(ingredients, action.ingredient,"FITSTs")
       const state = [
         ...ingredients,
         action.ingredient
       ]
+      // console.log(state,"KAST")
       return state
     case "SET":
       return action.ingredients
@@ -26,15 +28,18 @@ const ingredientReducer = (ingredients, action) => {
 }
 
 const Ingredients = (props) => {
-  const { data, loading, error, sendRequest, actionName,extraData } = useHttp()
+  const { data, loading, error, sendRequest, actionName } = useHttp()
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
   useEffect(() => {
     if (actionName === 'ADD')
-      dispatch({ type: "ADD", ingredient: {...extraData, id: data.name} })
-    else if (actionName === 'DELETE'){
-      dispatch({ type: "DELETE", id: extraData })
-    }
-  }, [data, actionName,extraData]);
+      dispatch({ type: "ADD", ingredient: data })
+    else if (actionName === 'DELETE')
+      dispatch({ type: "DELETE", id: data.name })
+  }, [data, actionName]);
+
+
+
+
   const onFilterHandler = useCallback(ingredients => {
     dispatch({ type: "SET", ingredients: ingredients })
   }, [])
@@ -44,17 +49,15 @@ const Ingredients = (props) => {
     sendRequest("https://react-hooks-704c6.firebaseio.com/ingredients.json",
       "POST",
       ingredient,
-      "ADD",
-      ingredient
+      "ADD"
     )
   }, [sendRequest])
 
   const removeItem = useCallback(ingID => {
     sendRequest("https://react-hooks-704c6.firebaseio.com/ingredients/" + ingID + '.json',
-      "DELETE",
+      "POST",
       null,
-      "DELETE",
-      ingID
+      "DELETE"
     )
   }, [sendRequest])
 
